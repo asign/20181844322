@@ -2,13 +2,13 @@
 #include <conio.h>
 #include <time.h>
 
-#define NN 9
-#define N 3
-
+#define  MAXNN 25
+#define  MAXN 5
+int N;
 typedef struct square
 {
-    int i[NN+1];
-    int remain[NN+1];
+    int i[MAXNN+1];
+    int remain[MAXNN+1];
     int totalCount, resultCount, partResultCount;
     int t_start;
 } SQUARE;
@@ -19,15 +19,15 @@ int Used( SQUARE *ps, int no, int i);
 void    msquare( SQUARE *ps, int no);
 
 int main(int argc, char *argv[])
-{
+{   printf("input number(3-5):");
     SQUARE s;
-
+    scanf("%d",&N);
     s.t_start = clock();
     s.resultCount = s.totalCount = s.partResultCount = 0;
 
     int     i;
 
-    for(i=1;i<=NN;i++) {
+    for(i=1;i<=N*N;i++) {
         s.i[i] = 0;
         s.remain[i] = 1;
     }
@@ -43,12 +43,12 @@ void    msquare( SQUARE *ps, int no)
     int     i;
 
 
-    for(i=1;i<=NN;i++) {
+    for(i=1;i<=N*N;i++) {
         if ( ps->remain[i]==0 )
             continue;
         ps->i[no] = i;
         ps->remain[i] = 0;
-        if (no==NN-1) {
+        if (no==N*N-1) {
             ps->totalCount ++;
             if (exam(ps)) {
                 ps->resultCount ++;
@@ -69,18 +69,17 @@ void print(SQUARE s)
     int j;
 
     printf("%d\t[ ", s.resultCount);
-    for (j = 0; j < NN; j++)
+    for (j = 0; j < N*N; j++)
         printf("%d ", s.i[j]);
     printf("]\t\t[%d] [%d] \ttime:[%ld]\r\n", s.totalCount, s.partResultCount, clock() - s.t_start);
 }
 
-
 int exam(SQUARE *ps)
 {
-    int j, k, cflag, n;
-    int sum1, sum2, rsum[3], csum[3], stdsum;
+    int j, k, cflag, n,m;
+    int sum1, sum2, rsum[N], csum[N], stdsum;
+    stdsum=(N+N*N*N)/2;
 
-    stdsum = 15;
     for (j = 0; j < 3; j++)
     {
         csum[j] = 0;
@@ -89,24 +88,23 @@ int exam(SQUARE *ps)
     sum1 = 0;
     sum2 = 0;
 
-    for (j = 0; j < 3; j++)
+    for (j = 0; j < N; j++)
     {
-        for (k = 0; k < 3; k++)
+        for (k = 0; k < N; k++)
         {
             csum[k] += ps->i[j * N + k]; 
             rsum[j] += ps->i[j * N + k]; 
         }
         sum1 += ps->i[j * N + j];     
-        sum2 += ps->i[j * N + 2 - j]; 
+        sum2 += ps->i[j * N + N-1 - j]; 
     }
 
-   
     if (sum1 != stdsum || stdsum != sum2)
         return 0;
 
     (ps->partResultCount)++;
     cflag = 1;
-    for (j = 0; j < 3; j++)
+    for (j = 0; j < N; j++)
     {
         if (csum[j] != stdsum || rsum[j] != stdsum)
         {
