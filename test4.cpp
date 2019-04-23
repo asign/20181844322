@@ -19,9 +19,6 @@ int main(int argc, char *argv[])
 
     initSquare(&s);
     msquare(&s, 0);
-
-    print( tail->s, true);
-
     char    filename[256];
     sprintf(filename, "%dx%d result.txt", N,N);
     fileWrite( filename, head );
@@ -34,7 +31,6 @@ void    initSquare( SQUARE  *ps)
     ps->resultCount = ps->totalCount = ps->partResultCount = 0;
 
     int     i, temp;
-
     ps->t_start = clock();
     temp = 0;    
     for(i=1;i<=NN;i++) {
@@ -45,8 +41,6 @@ void    initSquare( SQUARE  *ps)
     ps->stdsum = temp / N;
     ps->t_current = 0;
 }
-
-
 SQUARENODE *sl_append(SQUARE *ps) 
 {
     SQUARENODE  *newnode;
@@ -129,33 +123,6 @@ void    msquare( SQUARE *ps, int no)
 
 }
 
-void fileWrite( char *filename, SQUARENODE head) 
-{
-    FILE    *fp;
-    SQUARENODE *n;
-    char    line[4096], temp[1024];
-    int     i;
-
-    fopen_s( &fp, filename, "w");
-    n = head.next;
-
-    while(n) {
-        sprintf( line, "%6d [ ", n->s.resultCount);
-        for(i=0;i<NN;i++) {
-            sprintf(temp, "%2d ", n->s.i[i]);
-            strcat_s( line, sizeof(line), temp);
-        } 
-        strcat_s( line, sizeof(line), "] ");
-        sprintf( temp, "%10d\n", n->s.t_current);
-        strcat_s( line, sizeof(line), temp);
-        fwrite( line, strlen(line), 1, fp);
-
-        n = n->next;
-    }
-
-    fclose(fp);
-}
-
 void print(SQUARE s, int direct)
 {
     int j;
@@ -185,4 +152,30 @@ int exam(SQUARE *ps)
         return 0;
     else
         return 1;
+}
+void fileWrite( char *filename, SQUARENODE head) 
+{
+    FILE    *fp;
+    SQUARENODE *n;
+    char    line[4096], temp[1024];
+    int     i;
+
+    fopen_s( &fp, filename, "w");
+    n = head.next;
+
+    while(n) {
+        sprintf( line, "%6d [ ", n->s.resultCount);
+        for(i=0;i<NN;i++) {
+            sprintf(temp, "%2d ", n->s.i[i]);
+            strcat_s( line, sizeof(line), temp);
+        } 
+        strcat_s( line, sizeof(line), "] ");
+        sprintf( temp, "%10d\n", n->s.t_current);
+        strcat_s( line, sizeof(line), temp);
+        fwrite( line, strlen(line), 1, fp);
+
+        n = n->next;
+    }
+
+    fclose(fp);
 }
